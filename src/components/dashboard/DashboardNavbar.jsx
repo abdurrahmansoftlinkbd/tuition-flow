@@ -1,6 +1,33 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 const DashboardNavbar = ({ onMenuClick }) => {
+  const navigate = useNavigate();
+
+  const { user, logout } = useAuth();
+
+  const displayName =
+    user?.displayName || user?.email?.split("@")[0] || "Tutor";
+
+  const initials = displayName
+    .split(" ")
+    .map((word) => word[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+
+      navigate("/login", {
+        replace: true,
+      });
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
+
   return (
     <header className="flex h-16 items-center justify-between border-b border-base-200 bg-base-100 px-4 sm:px-6">
       {/* Left */}
@@ -28,13 +55,14 @@ const DashboardNavbar = ({ onMenuClick }) => {
 
         <div>
           <p className="text-xs text-base-content/50">Dashboard</p>
+
           <h1 className="text-sm font-semibold sm:text-base">Overview</h1>
         </div>
       </div>
 
       {/* Right */}
       <div className="flex items-center gap-2 sm:gap-3">
-        {/* Notification */}
+        {/* Notifications */}
         <button className="btn btn-ghost btn-circle" aria-label="Notifications">
           <div className="indicator">
             <span className="indicator-item h-2.5 w-2.5 rounded-full bg-error" />
@@ -64,13 +92,20 @@ const DashboardNavbar = ({ onMenuClick }) => {
           >
             <div className="avatar placeholder">
               <div className="w-9 rounded-full bg-primary text-primary-content">
-                <span className="text-xs font-semibold">AR</span>
+                {user?.photoURL ? (
+                  <img src={user.photoURL} alt={displayName} />
+                ) : (
+                  <span className="text-xs font-semibold">{initials}</span>
+                )}
               </div>
             </div>
 
-            <div className="hidden text-left sm:block">
-              <p className="text-sm font-semibold">Abdur Rahman</p>
-              <p className="text-xs text-base-content/50">Tutor</p>
+            <div className="hidden max-w-40 text-left sm:block">
+              <p className="truncate text-sm font-semibold">{displayName}</p>
+
+              <p className="truncate text-xs text-base-content/50">
+                {user?.email}
+              </p>
             </div>
 
             <svg
@@ -96,11 +131,15 @@ const DashboardNavbar = ({ onMenuClick }) => {
             <li>
               <Link to="/dashboard/profile">Profile</Link>
             </li>
+
             <li>
               <Link to="/dashboard/settings">Settings</Link>
             </li>
+
             <li>
-              <button className="text-error">Logout</button>
+              <button onClick={handleLogout} className="text-error">
+                Logout
+              </button>
             </li>
           </ul>
         </div>
