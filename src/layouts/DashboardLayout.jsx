@@ -1,17 +1,22 @@
 import { useState } from "react";
 import { Outlet } from "react-router";
+
 import Sidebar from "../components/dashboard/Sidebar";
 import DashboardNavbar from "../components/dashboard/DashboardNavbar";
 
 const DashboardLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+  const closeSidebar = () => {
+    setIsSidebarOpen(false);
+  };
+
   return (
     <div className="min-h-screen bg-base-200/40">
       <div className="flex min-h-screen">
         {/* Desktop Sidebar */}
         <div className="hidden lg:block">
-          <Sidebar onClose={() => setIsSidebarOpen(false)} />
+          <Sidebar onClose={closeSidebar} />
         </div>
 
         {/* Mobile Sidebar */}
@@ -21,18 +26,18 @@ const DashboardLayout = () => {
             <button
               type="button"
               aria-label="Close sidebar"
-              onClick={() => setIsSidebarOpen(false)}
+              onClick={closeSidebar}
               className="fixed inset-0 z-40 bg-black/30 lg:hidden"
             />
 
             {/* Sidebar */}
             <div className="fixed inset-y-0 left-0 z-50 lg:hidden">
-              <Sidebar onClose={() => setIsSidebarOpen(false)} />
+              <Sidebar onClose={closeSidebar} />
             </div>
           </>
         )}
 
-        {/* Main Area */}
+        {/* Main Content */}
         <div className="flex min-w-0 flex-1 flex-col">
           <DashboardNavbar onMenuClick={() => setIsSidebarOpen(true)} />
 
