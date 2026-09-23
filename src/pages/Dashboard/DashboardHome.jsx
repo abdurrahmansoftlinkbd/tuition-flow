@@ -1,9 +1,19 @@
+import { Link } from "react-router";
+import { useAuth } from "../../context/AuthContext";
+
 const DashboardHome = () => {
+  const { user } = useAuth();
+
+  const displayName =
+    user?.displayName || user?.email?.split("@")[0] || "Tutor";
+
   const stats = [
     {
       title: "Total Students",
       value: "24",
       description: "3 new this month",
+      path: "/dashboard/students",
+      action: "View Students",
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -25,6 +35,8 @@ const DashboardHome = () => {
       title: "Monthly Collection",
       value: "৳18,500",
       description: "82% of total tuition",
+      path: "/dashboard/payments",
+      action: "View Payments",
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -46,6 +58,8 @@ const DashboardHome = () => {
       title: "Outstanding",
       value: "৳4,000",
       description: "4 students have dues",
+      path: "/dashboard/payments",
+      action: "Check Dues",
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -67,6 +81,8 @@ const DashboardHome = () => {
       title: "Classes Today",
       value: "5",
       description: "Next class at 6:00 PM",
+      path: "/dashboard/schedule",
+      action: "View Schedule",
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -88,24 +104,28 @@ const DashboardHome = () => {
 
   const recentPayments = [
     {
+      id: 1,
       student: "Nafisa Rahman",
       amount: "৳1,500",
       date: "23 Sep 2026",
       status: "Paid",
     },
     {
+      id: 2,
       student: "Sakib Hasan",
       amount: "৳2,000",
       date: "22 Sep 2026",
       status: "Paid",
     },
     {
+      id: 3,
       student: "Tanjim Ahmed",
       amount: "৳1,500",
       date: "21 Sep 2026",
       status: "Paid",
     },
     {
+      id: 4,
       student: "Maliha Islam",
       amount: "৳1,500",
       date: "20 Sep 2026",
@@ -115,16 +135,19 @@ const DashboardHome = () => {
 
   const upcomingClasses = [
     {
+      id: 1,
       student: "Nafisa Rahman",
       subject: "Mathematics",
       time: "6:00 PM",
     },
     {
+      id: 2,
       student: "Sakib Hasan",
       subject: "Physics",
       time: "7:00 PM",
     },
     {
+      id: 3,
       student: "Tanjim Ahmed",
       subject: "Mathematics",
       time: "9:00 PM",
@@ -133,14 +156,14 @@ const DashboardHome = () => {
 
   return (
     <div className="mx-auto max-w-7xl space-y-6">
-      {/* Heading */}
+      {/* Page Heading */}
       <div>
         <p className="text-sm text-base-content/50">
           Wednesday, 23 September 2026
         </p>
 
         <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">
-          Welcome back, Abdur Rahman
+          Welcome back, {displayName}
         </h2>
 
         <p className="mt-2 text-sm text-base-content/60">
@@ -167,9 +190,16 @@ const DashboardHome = () => {
               </div>
             </div>
 
-            <p className="mt-4 text-xs text-base-content/50">
-              {stat.description}
-            </p>
+            <div className="mt-4 flex items-center justify-between gap-2">
+              <p className="text-xs text-base-content/50">{stat.description}</p>
+
+              <Link
+                to={stat.path}
+                className="text-xs font-semibold text-primary hover:underline"
+              >
+                {stat.action}
+              </Link>
+            </div>
           </div>
         ))}
       </div>
@@ -187,9 +217,12 @@ const DashboardHome = () => {
               </p>
             </div>
 
-            <button className="btn btn-ghost btn-sm text-primary">
+            <Link
+              to="/dashboard/payments"
+              className="btn btn-ghost btn-sm text-primary"
+            >
               View All
-            </button>
+            </Link>
           </div>
 
           <div className="overflow-x-auto">
@@ -205,11 +238,9 @@ const DashboardHome = () => {
 
               <tbody>
                 {recentPayments.map((payment) => (
-                  <tr key={payment.student}>
+                  <tr key={payment.id}>
                     <td>
-                      <div>
-                        <p className="font-medium">{payment.student}</p>
-                      </div>
+                      <p className="font-medium">{payment.student}</p>
                     </td>
 
                     <td className="font-semibold">{payment.amount}</td>
@@ -230,40 +261,51 @@ const DashboardHome = () => {
 
         {/* Upcoming Classes */}
         <div className="rounded-xl border border-base-200 bg-base-100 shadow-sm">
-          <div className="border-b border-base-200 px-5 py-4">
-            <h3 className="font-semibold">Upcoming Classes</h3>
+          <div className="flex items-center justify-between border-b border-base-200 px-5 py-4">
+            <div>
+              <h3 className="font-semibold">Upcoming Classes</h3>
 
-            <p className="mt-1 text-xs text-base-content/50">
-              Your schedule for today
-            </p>
+              <p className="mt-1 text-xs text-base-content/50">
+                Your schedule for today
+              </p>
+            </div>
+
+            <Link
+              to="/dashboard/schedule"
+              className="text-xs font-semibold text-primary hover:underline"
+            >
+              View
+            </Link>
           </div>
 
           <div className="space-y-3 p-5">
             {upcomingClasses.map((item) => (
               <div
-                key={`${item.student}-${item.time}`}
-                className="rounded-lg border border-base-200 p-4"
+                key={item.id}
+                className="rounded-lg border border-base-200 p-4 transition hover:border-primary/30 hover:bg-base-200/30"
               >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">{item.student}</p>
+                <Link to="/dashboard/schedule">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="font-medium">{item.student}</p>
 
-                    <p className="mt-1 text-xs text-base-content/50">
-                      {item.subject}
-                    </p>
+                      <p className="mt-1 text-xs text-base-content/50">
+                        {item.subject}
+                      </p>
+                    </div>
+
+                    <span className="whitespace-nowrap text-sm font-semibold text-primary">
+                      {item.time}
+                    </span>
                   </div>
-
-                  <span className="text-sm font-semibold text-primary">
-                    {item.time}
-                  </span>
-                </div>
+                </Link>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Collection Progress + Quick Actions */}
+      {/* Collection + Quick Actions */}
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Collection */}
         <div className="rounded-xl border border-base-200 bg-base-100 p-5 shadow-sm">
@@ -285,11 +327,18 @@ const DashboardHome = () => {
             max="100"
           />
 
-          <div className="mt-4 flex justify-between text-sm">
+          <div className="mt-4 flex items-center justify-between text-sm">
             <span className="text-base-content/60">Collected</span>
 
             <span className="font-semibold">৳18,500 / ৳22,500</span>
           </div>
+
+          <Link
+            to="/dashboard/payments"
+            className="mt-4 inline-flex text-sm font-semibold text-primary hover:underline"
+          >
+            View payment records →
+          </Link>
         </div>
 
         {/* Quick Actions */}
@@ -301,13 +350,21 @@ const DashboardHome = () => {
           </p>
 
           <div className="mt-5 grid grid-cols-2 gap-3">
-            <button className="btn btn-primary">Add Student</button>
+            <Link to="/dashboard/students/add" className="btn btn-primary">
+              Add Student
+            </Link>
 
-            <button className="btn btn-outline">Record Payment</button>
+            <Link to="/dashboard/payments/add" className="btn btn-outline">
+              Record Payment
+            </Link>
 
-            <button className="btn btn-outline">Mark Attendance</button>
+            <Link to="/dashboard/attendance" className="btn btn-outline">
+              Mark Attendance
+            </Link>
 
-            <button className="btn btn-outline">View Schedule</button>
+            <Link to="/dashboard/schedule" className="btn btn-outline">
+              View Schedule
+            </Link>
           </div>
         </div>
       </div>
