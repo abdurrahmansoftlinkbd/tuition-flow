@@ -10,12 +10,26 @@ import DashboardHome from "./pages/Dashboard/DashboardHome";
 
 import ProtectedRoute from "./routes/ProtectedRoute";
 
+const PlaceholderPage = ({ title, description }) => {
+  return (
+    <div className="mx-auto max-w-7xl">
+      <div className="rounded-xl border border-base-200 bg-base-100 p-6 shadow-sm">
+        <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
+
+        <p className="mt-2 text-sm text-base-content/60">{description}</p>
+      </div>
+    </div>
+  );
+};
+
 const router = createBrowserRouter([
+  // Public Pages
   {
     path: "/",
     element: <Home />,
   },
 
+  // Authentication
   {
     path: "/login",
     element: <Login />,
@@ -26,6 +40,7 @@ const router = createBrowserRouter([
     element: <Register />,
   },
 
+  // Protected Pages
   {
     element: <ProtectedRoute />,
     children: [
@@ -33,44 +48,107 @@ const router = createBrowserRouter([
         path: "/dashboard",
         element: <DashboardLayout />,
         children: [
+          // Dashboard Overview
           {
             index: true,
             element: <DashboardHome />,
           },
 
+          // Students
           {
             path: "students",
-            element: <div className="text-2xl font-bold">Students Page</div>,
+            element: (
+              <PlaceholderPage
+                title="Students"
+                description="Manage all of your tuition students from here."
+              />
+            ),
           },
 
+          {
+            path: "students/add",
+            element: (
+              <PlaceholderPage
+                title="Add Student"
+                description="The student creation form will be implemented in the next stage."
+              />
+            ),
+          },
+
+          // Payments
           {
             path: "payments",
-            element: <div className="text-2xl font-bold">Payments Page</div>,
+            element: (
+              <PlaceholderPage
+                title="Payments"
+                description="View and manage your tuition payment records."
+              />
+            ),
           },
 
+          {
+            path: "payments/add",
+            element: (
+              <PlaceholderPage
+                title="Record Payment"
+                description="The payment recording form will be implemented in the payment module."
+              />
+            ),
+          },
+
+          // Attendance
           {
             path: "attendance",
-            element: <div className="text-2xl font-bold">Attendance Page</div>,
+            element: (
+              <PlaceholderPage
+                title="Attendance"
+                description="Track student attendance and class participation."
+              />
+            ),
           },
 
+          // Schedule
           {
             path: "schedule",
-            element: <div className="text-2xl font-bold">Schedule Page</div>,
+            element: (
+              <PlaceholderPage
+                title="Schedule"
+                description="Manage your upcoming tuition classes and schedules."
+              />
+            ),
           },
 
+          // Reports
           {
             path: "reports",
-            element: <div className="text-2xl font-bold">Reports Page</div>,
+            element: (
+              <PlaceholderPage
+                title="Reports"
+                description="View tuition, payment, attendance, and student reports."
+              />
+            ),
           },
 
+          // Profile
           {
             path: "profile",
-            element: <div className="text-2xl font-bold">Profile Page</div>,
+            element: (
+              <PlaceholderPage
+                title="Profile"
+                description="Manage your TuitionFlow profile information."
+              />
+            ),
           },
 
+          // Settings
           {
             path: "settings",
-            element: <div className="text-2xl font-bold">Settings Page</div>,
+            element: (
+              <PlaceholderPage
+                title="Settings"
+                description="Configure your TuitionFlow account preferences."
+              />
+            ),
           },
         ],
       },
