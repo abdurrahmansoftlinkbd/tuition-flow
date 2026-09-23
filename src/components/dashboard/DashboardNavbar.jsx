@@ -1,8 +1,9 @@
-import { Link, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { useAuth } from "../../context/AuthContext";
 
 const DashboardNavbar = ({ onMenuClick }) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { user, logout } = useAuth();
 
@@ -11,10 +12,59 @@ const DashboardNavbar = ({ onMenuClick }) => {
 
   const initials = displayName
     .split(" ")
+    .filter(Boolean)
     .map((word) => word[0])
     .join("")
     .slice(0, 2)
     .toUpperCase();
+
+  const pageTitles = {
+    "/dashboard": {
+      label: "Dashboard",
+      title: "Overview",
+    },
+    "/dashboard/students": {
+      label: "Students",
+      title: "Students",
+    },
+    "/dashboard/students/add": {
+      label: "Students",
+      title: "Add Student",
+    },
+    "/dashboard/payments": {
+      label: "Payments",
+      title: "Payments",
+    },
+    "/dashboard/payments/add": {
+      label: "Payments",
+      title: "Record Payment",
+    },
+    "/dashboard/attendance": {
+      label: "Attendance",
+      title: "Attendance",
+    },
+    "/dashboard/schedule": {
+      label: "Schedule",
+      title: "Schedule",
+    },
+    "/dashboard/reports": {
+      label: "Reports",
+      title: "Reports",
+    },
+    "/dashboard/profile": {
+      label: "Account",
+      title: "Profile",
+    },
+    "/dashboard/settings": {
+      label: "Account",
+      title: "Settings",
+    },
+  };
+
+  const currentPage = pageTitles[location.pathname] || {
+    label: "Dashboard",
+    title: "TuitionFlow",
+  };
 
   const handleLogout = async () => {
     try {
@@ -33,6 +83,7 @@ const DashboardNavbar = ({ onMenuClick }) => {
       {/* Left */}
       <div className="flex items-center gap-3">
         <button
+          type="button"
           onClick={onMenuClick}
           className="btn btn-ghost btn-square lg:hidden"
           aria-label="Open sidebar"
@@ -54,16 +105,22 @@ const DashboardNavbar = ({ onMenuClick }) => {
         </button>
 
         <div>
-          <p className="text-xs text-base-content/50">Dashboard</p>
+          <p className="text-xs text-base-content/50">{currentPage.label}</p>
 
-          <h1 className="text-sm font-semibold sm:text-base">Overview</h1>
+          <h1 className="text-sm font-semibold sm:text-base">
+            {currentPage.title}
+          </h1>
         </div>
       </div>
 
       {/* Right */}
       <div className="flex items-center gap-2 sm:gap-3">
         {/* Notifications */}
-        <button className="btn btn-ghost btn-circle" aria-label="Notifications">
+        <button
+          type="button"
+          className="btn btn-ghost btn-circle"
+          aria-label="Notifications"
+        >
           <div className="indicator">
             <span className="indicator-item h-2.5 w-2.5 rounded-full bg-error" />
 
@@ -84,9 +141,10 @@ const DashboardNavbar = ({ onMenuClick }) => {
           </div>
         </button>
 
-        {/* User */}
+        {/* User Menu */}
         <div className="dropdown dropdown-end">
           <button
+            type="button"
             tabIndex={0}
             className="flex items-center gap-2 rounded-lg p-1.5 transition hover:bg-base-200"
           >
@@ -137,7 +195,11 @@ const DashboardNavbar = ({ onMenuClick }) => {
             </li>
 
             <li>
-              <button onClick={handleLogout} className="text-error">
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="text-error"
+              >
                 Logout
               </button>
             </li>
