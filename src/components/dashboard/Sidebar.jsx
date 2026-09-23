@@ -77,7 +77,7 @@ const Sidebar = ({ onClose }) => {
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
-            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2zm4-4l2 2 4-4"
+            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
           />
         </svg>
       ),
@@ -150,6 +150,7 @@ const Sidebar = ({ onClose }) => {
         </NavLink>
 
         <button
+          type="button"
           onClick={onClose}
           className="btn btn-ghost btn-sm btn-square lg:hidden"
           aria-label="Close sidebar"
@@ -171,7 +172,7 @@ const Sidebar = ({ onClose }) => {
         </button>
       </div>
 
-      {/* Navigation */}
+      {/* Main Navigation */}
       <div className="flex-1 overflow-y-auto p-4">
         <p className="mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-base-content/40">
           Menu
@@ -200,7 +201,7 @@ const Sidebar = ({ onClose }) => {
         </ul>
       </div>
 
-      {/* Bottom Section */}
+      {/* Bottom Navigation */}
       <div className="border-t border-base-200 p-4">
         <NavLink
           to="/dashboard/settings"
