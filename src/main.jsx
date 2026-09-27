@@ -9,6 +9,7 @@ import AuthProvider from "./context/AuthContext";
 import StudentProvider from "./context/StudentContext";
 import PaymentProvider from "./context/PaymentContext";
 import AttendanceProvider from "./context/AttendanceContext";
+import ScheduleProvider from "./context/ScheduleContext";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -16,7 +17,9 @@ createRoot(document.getElementById("root")).render(
       <StudentProvider>
         <PaymentProvider>
           <AttendanceProvider>
-            <App />
+            <ScheduleProvider>
+              <App />
+            </ScheduleProvider>
           </AttendanceProvider>
         </PaymentProvider>
       </StudentProvider>
