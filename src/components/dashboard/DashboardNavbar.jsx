@@ -92,6 +92,20 @@ const DashboardNavbar = ({ onMenuClick }) => {
       };
     }
 
+    if (path === "/dashboard/schedule/add") {
+      return {
+        label: "Schedule",
+        title: "Add Class",
+      };
+    }
+
+    if (path.startsWith("/dashboard/schedule/") && path.endsWith("/edit")) {
+      return {
+        label: "Schedule",
+        title: "Edit Class",
+      };
+    }
+
     if (path === "/dashboard/reports") {
       return {
         label: "Reports",
