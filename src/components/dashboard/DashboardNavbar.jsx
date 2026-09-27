@@ -78,6 +78,13 @@ const DashboardNavbar = ({ onMenuClick }) => {
       };
     }
 
+    if (path === "/dashboard/attendance/history") {
+      return {
+        label: "Attendance",
+        title: "Attendance History",
+      };
+    }
+
     if (path === "/dashboard/schedule") {
       return {
         label: "Schedule",
