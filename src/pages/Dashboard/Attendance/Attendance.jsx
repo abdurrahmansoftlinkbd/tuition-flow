@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router";
+
+import { Link, useSearchParams } from "react-router";
 
 import { useStudents } from "../../../context/StudentContext";
 import { useAttendance } from "../../../context/AttendanceContext";
@@ -28,9 +29,13 @@ const formatDate = (dateString) => {
 const Attendance = () => {
   const { students } = useStudents();
 
+  const [searchParams] = useSearchParams();
+
+  const queryDate = searchParams.get("date");
+
   const { getAttendanceByDate, saveAttendance } = useAttendance();
 
-  const [selectedDate, setSelectedDate] = useState(getLocalDate());
+  const [selectedDate, setSelectedDate] = useState(queryDate || getLocalDate());
 
   const [search, setSearch] = useState("");
 
