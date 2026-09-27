@@ -13,6 +13,9 @@ import AddStudent from "./pages/Dashboard/Students/AddStudent";
 import StudentDetails from "./pages/Dashboard/Students/StudentDetails";
 import EditStudent from "./pages/Dashboard/Students/EditStudent";
 
+import Payments from "./pages/Dashboard/Payments/Payments";
+import AddPayment from "./pages/Dashboard/Payments/AddPayment";
+
 import ProtectedRoute from "./routes/ProtectedRoute";
 
 const PlaceholderPage = ({ title, description }) => {
@@ -45,7 +48,7 @@ const router = createBrowserRouter([
     element: <Register />,
   },
 
-  // Protected
+  // Protected Dashboard
   {
     element: <ProtectedRoute />,
     children: [
@@ -82,22 +85,12 @@ const router = createBrowserRouter([
           // Payments
           {
             path: "payments",
-            element: (
-              <PlaceholderPage
-                title="Payments"
-                description="View and manage your tuition payment records."
-              />
-            ),
+            element: <Payments />,
           },
 
           {
             path: "payments/add",
-            element: (
-              <PlaceholderPage
-                title="Record Payment"
-                description="Record a new tuition payment."
-              />
-            ),
+            element: <AddPayment />,
           },
 
           // Attendance
