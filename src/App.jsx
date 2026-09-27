@@ -16,6 +16,9 @@ import EditStudent from "./pages/Dashboard/Students/EditStudent";
 import Payments from "./pages/Dashboard/Payments/Payments";
 import AddPayment from "./pages/Dashboard/Payments/AddPayment";
 
+import Attendance from "./pages/Dashboard/Attendance/Attendance";
+import AttendanceHistory from "./pages/Dashboard/Attendance/AttendanceHistory";
+
 import ProtectedRoute from "./routes/ProtectedRoute";
 
 const PlaceholderPage = ({ title, description }) => {
@@ -56,6 +59,7 @@ const router = createBrowserRouter([
         path: "/dashboard",
         element: <DashboardLayout />,
         children: [
+          // Overview
           {
             index: true,
             element: <DashboardHome />,
@@ -96,12 +100,12 @@ const router = createBrowserRouter([
           // Attendance
           {
             path: "attendance",
-            element: (
-              <PlaceholderPage
-                title="Attendance"
-                description="Track student attendance and class participation."
-              />
-            ),
+            element: <Attendance />,
+          },
+
+          {
+            path: "attendance/history",
+            element: <AttendanceHistory />,
           },
 
           // Schedule
