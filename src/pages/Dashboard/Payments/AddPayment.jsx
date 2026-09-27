@@ -1,4 +1,4 @@
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router";
 
 import PaymentForm from "../../../components/payments/PaymentForm";
 import { usePayments } from "../../../context/PaymentContext";
