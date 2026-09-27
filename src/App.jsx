@@ -8,6 +8,11 @@ import Register from "./pages/Auth/Register";
 import DashboardLayout from "./layouts/DashboardLayout";
 import DashboardHome from "./pages/Dashboard/DashboardHome";
 
+import Students from "./pages/Dashboard/Students/Students";
+import AddStudent from "./pages/Dashboard/Students/AddStudent";
+import StudentDetails from "./pages/Dashboard/Students/StudentDetails";
+import EditStudent from "./pages/Dashboard/Students/EditStudent";
+
 import ProtectedRoute from "./routes/ProtectedRoute";
 
 const PlaceholderPage = ({ title, description }) => {
@@ -23,7 +28,7 @@ const PlaceholderPage = ({ title, description }) => {
 };
 
 const router = createBrowserRouter([
-  // Public Pages
+  // Public
   {
     path: "/",
     element: <Home />,
@@ -40,7 +45,7 @@ const router = createBrowserRouter([
     element: <Register />,
   },
 
-  // Protected Pages
+  // Protected
   {
     element: <ProtectedRoute />,
     children: [
@@ -48,7 +53,6 @@ const router = createBrowserRouter([
         path: "/dashboard",
         element: <DashboardLayout />,
         children: [
-          // Dashboard Overview
           {
             index: true,
             element: <DashboardHome />,
@@ -57,22 +61,22 @@ const router = createBrowserRouter([
           // Students
           {
             path: "students",
-            element: (
-              <PlaceholderPage
-                title="Students"
-                description="Manage all of your tuition students from here."
-              />
-            ),
+            element: <Students />,
           },
 
           {
             path: "students/add",
-            element: (
-              <PlaceholderPage
-                title="Add Student"
-                description="The student creation form will be implemented in the next stage."
-              />
-            ),
+            element: <AddStudent />,
+          },
+
+          {
+            path: "students/:id",
+            element: <StudentDetails />,
+          },
+
+          {
+            path: "students/:id/edit",
+            element: <EditStudent />,
           },
 
           // Payments
@@ -91,7 +95,7 @@ const router = createBrowserRouter([
             element: (
               <PlaceholderPage
                 title="Record Payment"
-                description="The payment recording form will be implemented in the payment module."
+                description="Record a new tuition payment."
               />
             ),
           },
@@ -113,7 +117,7 @@ const router = createBrowserRouter([
             element: (
               <PlaceholderPage
                 title="Schedule"
-                description="Manage your upcoming tuition classes and schedules."
+                description="Manage your upcoming tuition classes."
               />
             ),
           },
@@ -124,7 +128,7 @@ const router = createBrowserRouter([
             element: (
               <PlaceholderPage
                 title="Reports"
-                description="View tuition, payment, attendance, and student reports."
+                description="View tuition and student reports."
               />
             ),
           },
@@ -135,7 +139,7 @@ const router = createBrowserRouter([
             element: (
               <PlaceholderPage
                 title="Profile"
-                description="Manage your TuitionFlow profile information."
+                description="Manage your TuitionFlow profile."
               />
             ),
           },
@@ -146,7 +150,7 @@ const router = createBrowserRouter([
             element: (
               <PlaceholderPage
                 title="Settings"
-                description="Configure your TuitionFlow account preferences."
+                description="Manage your account preferences."
               />
             ),
           },
