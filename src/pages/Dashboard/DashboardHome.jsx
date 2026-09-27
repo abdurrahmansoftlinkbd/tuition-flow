@@ -1,17 +1,45 @@
 import { Link } from "react-router";
+
 import { useAuth } from "../../context/AuthContext";
+import { useStudents } from "../../context/StudentContext";
+import { usePayments } from "../../context/PaymentContext";
+
+const formatDate = () => {
+  return new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+};
 
 const DashboardHome = () => {
   const { user } = useAuth();
+  const { students } = useStudents();
+  const { payments, monthlySummary } = usePayments();
 
   const displayName =
     user?.displayName || user?.email?.split("@")[0] || "Tutor";
 
+  const activeStudents = students.filter(
+    (student) => student.status === "Active",
+  );
+
+  const recentPayments = [...payments]
+    .sort((a, b) => new Date(b.paymentDate) - new Date(a.paymentDate))
+    .slice(0, 4);
+
+  const getStudentName = (payment) => {
+    const student = students.find((item) => item.id === payment.studentId);
+
+    return student?.name || payment.studentName || "Unknown Student";
+  };
+
   const stats = [
     {
       title: "Total Students",
-      value: "24",
-      description: "3 new this month",
+      value: students.length,
+      description: `${activeStudents.length} active students`,
       path: "/dashboard/students",
       action: "View Students",
       icon: (
@@ -31,10 +59,11 @@ const DashboardHome = () => {
         </svg>
       ),
     },
+
     {
       title: "Monthly Collection",
-      value: "৳18,500",
-      description: "82% of total tuition",
+      value: `৳${monthlySummary.collectedAmount.toLocaleString()}`,
+      description: `${monthlySummary.collectionPercentage}% collected`,
       path: "/dashboard/payments",
       action: "View Payments",
       icon: (
@@ -54,10 +83,11 @@ const DashboardHome = () => {
         </svg>
       ),
     },
+
     {
       title: "Outstanding",
-      value: "৳4,000",
-      description: "4 students have dues",
+      value: `৳${monthlySummary.dueAmount.toLocaleString()}`,
+      description: `${monthlySummary.dueStudents} students have dues`,
       path: "/dashboard/payments",
       action: "Check Dues",
       icon: (
@@ -77,12 +107,13 @@ const DashboardHome = () => {
         </svg>
       ),
     },
+
     {
-      title: "Classes Today",
-      value: "5",
-      description: "Next class at 6:00 PM",
-      path: "/dashboard/schedule",
-      action: "View Schedule",
+      title: "Monthly Target",
+      value: `৳${monthlySummary.expectedAmount.toLocaleString()}`,
+      description: "Expected tuition collection",
+      path: "/dashboard/payments",
+      action: "View Overview",
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -95,41 +126,10 @@ const DashboardHome = () => {
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
-            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+            d="M4 19V5m0 14h16M8 15v-4m4 4V8m4 7v-6"
           />
         </svg>
       ),
-    },
-  ];
-
-  const recentPayments = [
-    {
-      id: 1,
-      student: "Nafisa Rahman",
-      amount: "৳1,500",
-      date: "23 Sep 2026",
-      status: "Paid",
-    },
-    {
-      id: 2,
-      student: "Sakib Hasan",
-      amount: "৳2,000",
-      date: "22 Sep 2026",
-      status: "Paid",
-    },
-    {
-      id: 3,
-      student: "Tanjim Ahmed",
-      amount: "৳1,500",
-      date: "21 Sep 2026",
-      status: "Paid",
-    },
-    {
-      id: 4,
-      student: "Maliha Islam",
-      amount: "৳1,500",
-      date: "20 Sep 2026",
-      status: "Paid",
     },
   ];
 
@@ -156,18 +156,16 @@ const DashboardHome = () => {
 
   return (
     <div className="mx-auto max-w-7xl space-y-6">
-      {/* Page Heading */}
+      {/* Header */}
       <div>
-        <p className="text-sm text-base-content/50">
-          Wednesday, 23 September 2026
-        </p>
+        <p className="text-sm text-base-content/50">{formatDate()}</p>
 
         <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">
           Welcome back, {displayName}
         </h2>
 
         <p className="mt-2 text-sm text-base-content/60">
-          Here is what is happening with your tuition today.
+          Here is an overview of your tuition activities.
         </p>
       </div>
 
@@ -204,7 +202,44 @@ const DashboardHome = () => {
         ))}
       </div>
 
-      {/* Main Grid */}
+      {/* Collection */}
+      <div className="rounded-xl border border-base-200 bg-base-100 p-5 shadow-sm">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="font-semibold">Monthly Collection</h3>
+
+            <p className="mt-1 text-xs text-base-content/50">
+              Tuition collection progress
+            </p>
+          </div>
+
+          <span className="text-sm font-semibold text-primary">
+            {monthlySummary.collectionPercentage}%
+          </span>
+        </div>
+
+        <progress
+          className="progress progress-primary mt-5 w-full"
+          value={monthlySummary.collectionPercentage}
+          max="100"
+        />
+
+        <div className="mt-4 flex flex-col justify-between gap-2 text-sm sm:flex-row">
+          <span className="text-base-content/60">
+            Collected: ৳{monthlySummary.collectedAmount.toLocaleString()}
+          </span>
+
+          <span className="text-base-content/60">
+            Due: ৳{monthlySummary.dueAmount.toLocaleString()}
+          </span>
+
+          <span className="font-semibold">
+            Target: ৳{monthlySummary.expectedAmount.toLocaleString()}
+          </span>
+        </div>
+      </div>
+
+      {/* Main Content */}
       <div className="grid gap-6 xl:grid-cols-3">
         {/* Recent Payments */}
         <div className="rounded-xl border border-base-200 bg-base-100 shadow-sm xl:col-span-2">
@@ -213,7 +248,7 @@ const DashboardHome = () => {
               <h3 className="font-semibold">Recent Payments</h3>
 
               <p className="mt-1 text-xs text-base-content/50">
-                Latest tuition payments
+                Latest tuition transactions
               </p>
             </div>
 
@@ -225,131 +260,71 @@ const DashboardHome = () => {
             </Link>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Student</th>
-                  <th>Amount</th>
-                  <th>Date</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {recentPayments.map((payment) => (
-                  <tr key={payment.id}>
-                    <td>
-                      <p className="font-medium">{payment.student}</p>
-                    </td>
-
-                    <td className="font-semibold">{payment.amount}</td>
-
-                    <td className="text-base-content/60">{payment.date}</td>
-
-                    <td>
-                      <span className="badge badge-success badge-sm">
-                        {payment.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* Upcoming Classes */}
-        <div className="rounded-xl border border-base-200 bg-base-100 shadow-sm">
-          <div className="flex items-center justify-between border-b border-base-200 px-5 py-4">
-            <div>
-              <h3 className="font-semibold">Upcoming Classes</h3>
-
-              <p className="mt-1 text-xs text-base-content/50">
-                Your schedule for today
+          {recentPayments.length === 0 ? (
+            <div className="p-10 text-center">
+              <p className="text-sm text-base-content/50">
+                No payments have been recorded yet.
               </p>
-            </div>
 
-            <Link
-              to="/dashboard/schedule"
-              className="text-xs font-semibold text-primary hover:underline"
-            >
-              View
-            </Link>
-          </div>
-
-          <div className="space-y-3 p-5">
-            {upcomingClasses.map((item) => (
-              <div
-                key={item.id}
-                className="rounded-lg border border-base-200 p-4 transition hover:border-primary/30 hover:bg-base-200/30"
+              <Link
+                to="/dashboard/payments/add"
+                className="btn btn-primary btn-sm mt-4"
               >
-                <Link to="/dashboard/schedule">
-                  <div className="flex items-center justify-between gap-3">
-                    <div>
-                      <p className="font-medium">{item.student}</p>
-
-                      <p className="mt-1 text-xs text-base-content/50">
-                        {item.subject}
-                      </p>
-                    </div>
-
-                    <span className="whitespace-nowrap text-sm font-semibold text-primary">
-                      {item.time}
-                    </span>
-                  </div>
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Collection + Quick Actions */}
-      <div className="grid gap-6 lg:grid-cols-2">
-        {/* Collection */}
-        <div className="rounded-xl border border-base-200 bg-base-100 p-5 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="font-semibold">September Collection</h3>
-
-              <p className="mt-1 text-xs text-base-content/50">
-                Monthly tuition progress
-              </p>
+                Record Payment
+              </Link>
             </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Student</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Method</th>
+                  </tr>
+                </thead>
 
-            <span className="text-sm font-semibold text-primary">82%</span>
-          </div>
+                <tbody>
+                  {recentPayments.map((payment) => (
+                    <tr key={payment.id}>
+                      <td>
+                        <Link
+                          to={`/dashboard/students/${payment.studentId}`}
+                          className="font-medium hover:text-primary"
+                        >
+                          {getStudentName(payment)}
+                        </Link>
+                      </td>
 
-          <progress
-            className="progress progress-primary mt-5 w-full"
-            value="82"
-            max="100"
-          />
+                      <td className="font-semibold">
+                        ৳{Number(payment.amount).toLocaleString()}
+                      </td>
 
-          <div className="mt-4 flex items-center justify-between text-sm">
-            <span className="text-base-content/60">Collected</span>
+                      <td className="text-base-content/60">
+                        {payment.paymentDate}
+                      </td>
 
-            <span className="font-semibold">৳18,500 / ৳22,500</span>
-          </div>
-
-          <Link
-            to="/dashboard/payments"
-            className="mt-4 inline-flex text-sm font-semibold text-primary hover:underline"
-          >
-            View payment records →
-          </Link>
+                      <td>
+                        <span className="badge badge-outline badge-sm">
+                          {payment.method}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
 
         {/* Quick Actions */}
         <div className="rounded-xl border border-base-200 bg-base-100 p-5 shadow-sm">
           <h3 className="font-semibold">Quick Actions</h3>
 
-          <p className="mt-1 text-xs text-base-content/50">
-            Common actions you may need
-          </p>
+          <p className="mt-1 text-xs text-base-content/50">Common actions</p>
 
-          <div className="mt-5 grid grid-cols-2 gap-3">
+          <div className="mt-5 grid gap-3">
             <Link to="/dashboard/students/add" className="btn btn-primary">
               Add Student
             </Link>
@@ -366,6 +341,50 @@ const DashboardHome = () => {
               View Schedule
             </Link>
           </div>
+        </div>
+      </div>
+
+      {/* Upcoming Classes */}
+      <div className="rounded-xl border border-base-200 bg-base-100 shadow-sm">
+        <div className="flex items-center justify-between border-b border-base-200 px-5 py-4">
+          <div>
+            <h3 className="font-semibold">Upcoming Classes</h3>
+
+            <p className="mt-1 text-xs text-base-content/50">
+              Your upcoming tuition classes
+            </p>
+          </div>
+
+          <Link
+            to="/dashboard/schedule"
+            className="text-xs font-semibold text-primary hover:underline"
+          >
+            View Schedule
+          </Link>
+        </div>
+
+        <div className="grid gap-3 p-5 md:grid-cols-3">
+          {upcomingClasses.map((item) => (
+            <Link
+              key={item.id}
+              to="/dashboard/schedule"
+              className="rounded-lg border border-base-200 p-4 transition hover:border-primary/30 hover:bg-base-200/30"
+            >
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="font-medium">{item.student}</p>
+
+                  <p className="mt-1 text-xs text-base-content/50">
+                    {item.subject}
+                  </p>
+                </div>
+
+                <span className="whitespace-nowrap text-sm font-semibold text-primary">
+                  {item.time}
+                </span>
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
     </div>
