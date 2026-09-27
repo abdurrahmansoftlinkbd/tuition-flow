@@ -1,4 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router";
+
 import { useAuth } from "../../context/AuthContext";
 
 const DashboardNavbar = ({ onMenuClick }) => {
@@ -18,53 +19,100 @@ const DashboardNavbar = ({ onMenuClick }) => {
     .slice(0, 2)
     .toUpperCase();
 
-  const pageTitles = {
-    "/dashboard": {
+  const getPageInfo = () => {
+    const path = location.pathname;
+
+    if (path === "/dashboard") {
+      return {
+        label: "Dashboard",
+        title: "Overview",
+      };
+    }
+
+    if (path === "/dashboard/students") {
+      return {
+        label: "Students",
+        title: "Students",
+      };
+    }
+
+    if (path === "/dashboard/students/add") {
+      return {
+        label: "Students",
+        title: "Add Student",
+      };
+    }
+
+    if (path.startsWith("/dashboard/students/")) {
+      if (path.endsWith("/edit")) {
+        return {
+          label: "Students",
+          title: "Edit Student",
+        };
+      }
+
+      return {
+        label: "Students",
+        title: "Student Details",
+      };
+    }
+
+    if (path === "/dashboard/payments") {
+      return {
+        label: "Payments",
+        title: "Payments",
+      };
+    }
+
+    if (path === "/dashboard/payments/add") {
+      return {
+        label: "Payments",
+        title: "Record Payment",
+      };
+    }
+
+    if (path === "/dashboard/attendance") {
+      return {
+        label: "Attendance",
+        title: "Attendance",
+      };
+    }
+
+    if (path === "/dashboard/schedule") {
+      return {
+        label: "Schedule",
+        title: "Schedule",
+      };
+    }
+
+    if (path === "/dashboard/reports") {
+      return {
+        label: "Reports",
+        title: "Reports",
+      };
+    }
+
+    if (path === "/dashboard/profile") {
+      return {
+        label: "Account",
+        title: "Profile",
+      };
+    }
+
+    if (path === "/dashboard/settings") {
+      return {
+        label: "Account",
+        title: "Settings",
+      };
+    }
+
+    return {
       label: "Dashboard",
-      title: "Overview",
-    },
-    "/dashboard/students": {
-      label: "Students",
-      title: "Students",
-    },
-    "/dashboard/students/add": {
-      label: "Students",
-      title: "Add Student",
-    },
-    "/dashboard/payments": {
-      label: "Payments",
-      title: "Payments",
-    },
-    "/dashboard/payments/add": {
-      label: "Payments",
-      title: "Record Payment",
-    },
-    "/dashboard/attendance": {
-      label: "Attendance",
-      title: "Attendance",
-    },
-    "/dashboard/schedule": {
-      label: "Schedule",
-      title: "Schedule",
-    },
-    "/dashboard/reports": {
-      label: "Reports",
-      title: "Reports",
-    },
-    "/dashboard/profile": {
-      label: "Account",
-      title: "Profile",
-    },
-    "/dashboard/settings": {
-      label: "Account",
-      title: "Settings",
-    },
+      title: "TuitionFlow",
+    };
   };
 
-  const currentPage = pageTitles[location.pathname] || {
-    label: "Dashboard",
-    title: "TuitionFlow",
-  };
+  const pageInfo = getPageInfo();
 
   const handleLogout = async () => {
     try {
@@ -105,17 +153,16 @@ const DashboardNavbar = ({ onMenuClick }) => {
         </button>
 
         <div>
-          <p className="text-xs text-base-content/50">{currentPage.label}</p>
+          <p className="text-xs text-base-content/50">{pageInfo.label}</p>
 
           <h1 className="text-sm font-semibold sm:text-base">
-            {currentPage.title}
+            {pageInfo.title}
           </h1>
         </div>
       </div>
 
       {/* Right */}
       <div className="flex items-center gap-2 sm:gap-3">
-        {/* Notifications */}
         <button
           type="button"
           className="btn btn-ghost btn-circle"
@@ -141,7 +188,6 @@ const DashboardNavbar = ({ onMenuClick }) => {
           </div>
         </button>
 
-        {/* User Menu */}
         <div className="dropdown dropdown-end">
           <button
             type="button"
