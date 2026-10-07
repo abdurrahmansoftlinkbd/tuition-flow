@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router";
 import StudentForm from "../../../components/students/StudentForm";
 import { useStudents } from "../../../context/StudentContext";
+import toast from "react-hot-toast";
 
 const AddStudent = () => {
   const navigate = useNavigate();
@@ -8,6 +9,8 @@ const AddStudent = () => {
 
   const handleSubmit = (studentData) => {
     const newStudent = addStudent(studentData);
+
+    toast.success("Student added successfully.");
 
     navigate(`/dashboard/students/${newStudent.id}`, {
       replace: true,
