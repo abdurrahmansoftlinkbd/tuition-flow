@@ -1,5 +1,19 @@
 import { Link } from "react-router";
 
+import {
+  Area,
+  AreaChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+
+import { ArrowRight, TrendingUp } from "lucide-react";
+
+import { useMemo } from "react";
+
 import { useAuth } from "../../context/AuthContext";
 import { useStudents } from "../../context/StudentContext";
 import { usePayments } from "../../context/PaymentContext";
@@ -137,6 +151,29 @@ const DashboardHome = () => {
 
   const upcomingClasses = todaySchedule.slice(0, 3);
 
+  const monthlyCollectionData = useMemo(() => {
+    const currentMonth = new Date().getMonth();
+
+    return Array.from({ length: 6 }, (_, index) => {
+      const date = new Date();
+
+      date.setMonth(currentMonth - (5 - index));
+
+      const monthKey = date.toISOString().slice(0, 7);
+
+      const collected = payments
+        .filter((payment) => payment.month === monthKey)
+        .reduce((total, payment) => total + Number(payment.amount || 0), 0);
+
+      return {
+        month: date.toLocaleDateString("en-US", {
+          month: "short",
+        }),
+        collected,
+      };
+    });
+  }, [payments]);
+
   return (
     <div className="mx-auto max-w-7xl space-y-6">
       {/* Header */}
@@ -219,6 +256,79 @@ const DashboardHome = () => {
           <span className="font-semibold">
             Target: ৳{monthlySummary.expectedAmount.toLocaleString()}
           </span>
+        </div>
+      </div>
+
+      {/* Collection Overview Chart */}
+      <div className="rounded-xl border border-base-200 bg-base-100 p-5 shadow-sm sm:p-6">
+        <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+          <div>
+            <div className="flex items-center gap-2">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <TrendingUp className="h-5 w-5" />
+              </div>
+
+              <h3 className="font-semibold">Collection Overview</h3>
+            </div>
+
+            <p className="mt-2 text-xs text-base-content/50">
+              Tuition collection trend over the last six months.
+            </p>
+          </div>
+
+          <Link
+            to="/dashboard/reports"
+            className="btn btn-ghost btn-sm text-primary"
+          >
+            Detailed Reports
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+
+        <div className="mt-6 h-64">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={monthlyCollectionData}>
+              <defs>
+                <linearGradient
+                  id="dashboardCollection"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop offset="5%" stopOpacity={0.2} />
+
+                  <stop offset="95%" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+
+              <CartesianGrid
+                strokeDasharray="3 3"
+                vertical={false}
+                opacity={0.3}
+              />
+
+              <XAxis dataKey="month" tickLine={false} axisLine={false} />
+
+              <YAxis
+                tickLine={false}
+                axisLine={false}
+                tickFormatter={(value) => `৳${value / 1000}k`}
+              />
+
+              <Tooltip
+                formatter={(value) => `৳${Number(value).toLocaleString()}`}
+              />
+
+              <Area
+                type="monotone"
+                dataKey="collected"
+                stroke="currentColor"
+                fill="url(#dashboardCollection)"
+                strokeWidth={2}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
         </div>
       </div>
 
