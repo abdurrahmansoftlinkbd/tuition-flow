@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { useAuth } from "../../context/AuthContext";
 import { useStudents } from "../../context/StudentContext";
 import { usePayments } from "../../context/PaymentContext";
+import { useSchedules } from "../../context/ScheduleContext";
 
 const formatDate = () => {
   return new Date().toLocaleDateString("en-US", {
@@ -17,6 +18,7 @@ const DashboardHome = () => {
   const { user } = useAuth();
   const { students } = useStudents();
   const { payments, monthlySummary } = usePayments();
+  const { todaySchedule } = useSchedules();
 
   const displayName =
     user?.displayName || user?.email?.split("@")[0] || "Tutor";
@@ -133,26 +135,7 @@ const DashboardHome = () => {
     },
   ];
 
-  const upcomingClasses = [
-    {
-      id: 1,
-      student: "Nafisa Rahman",
-      subject: "Mathematics",
-      time: "6:00 PM",
-    },
-    {
-      id: 2,
-      student: "Sakib Hasan",
-      subject: "Physics",
-      time: "7:00 PM",
-    },
-    {
-      id: 3,
-      student: "Tanjim Ahmed",
-      subject: "Mathematics",
-      time: "9:00 PM",
-    },
-  ];
+  const upcomingClasses = todaySchedule.slice(0, 3);
 
   return (
     <div className="mx-auto max-w-7xl space-y-6">
@@ -345,13 +328,14 @@ const DashboardHome = () => {
       </div>
 
       {/* Upcoming Classes */}
+      {/* Upcoming Classes */}
       <div className="rounded-xl border border-base-200 bg-base-100 shadow-sm">
         <div className="flex items-center justify-between border-b border-base-200 px-5 py-4">
           <div>
-            <h3 className="font-semibold">Upcoming Classes</h3>
+            <h3 className="font-semibold">Today's Classes</h3>
 
             <p className="mt-1 text-xs text-base-content/50">
-              Your upcoming tuition classes
+              Your scheduled tuition classes for today
             </p>
           </div>
 
@@ -363,29 +347,55 @@ const DashboardHome = () => {
           </Link>
         </div>
 
-        <div className="grid gap-3 p-5 md:grid-cols-3">
-          {upcomingClasses.map((item) => (
-            <Link
-              key={item.id}
-              to="/dashboard/schedule"
-              className="rounded-lg border border-base-200 p-4 transition hover:border-primary/30 hover:bg-base-200/30"
-            >
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <p className="font-medium">{item.student}</p>
+        {upcomingClasses.length === 0 ? (
+          <div className="p-10 text-center">
+            <p className="text-sm text-base-content/50">
+              No classes are scheduled for today.
+            </p>
 
-                  <p className="mt-1 text-xs text-base-content/50">
-                    {item.subject}
-                  </p>
+            <Link
+              to="/dashboard/schedule/add"
+              className="btn btn-primary btn-sm mt-4"
+            >
+              Add Class
+            </Link>
+          </div>
+        ) : (
+          <div className="grid gap-3 p-5 md:grid-cols-3">
+            {upcomingClasses.map((item) => (
+              <Link
+                key={item.id}
+                to="/dashboard/schedule"
+                className="rounded-lg border border-base-200 p-4 transition hover:border-primary/30 hover:bg-base-200/30"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="font-medium">{item.studentName}</p>
+
+                    <p className="mt-1 text-xs text-base-content/50">
+                      {item.subject}
+                    </p>
+                  </div>
+
+                  <span className="whitespace-nowrap text-sm font-semibold text-primary">
+                    {new Date(
+                      `2000-01-01T${item.startTime}`,
+                    ).toLocaleTimeString("en-US", {
+                      hour: "numeric",
+                      minute: "2-digit",
+                    })}
+                  </span>
                 </div>
 
-                <span className="whitespace-nowrap text-sm font-semibold text-primary">
-                  {item.time}
-                </span>
-              </div>
-            </Link>
-          ))}
-        </div>
+                <div className="mt-3 flex items-center justify-between text-xs text-base-content/50">
+                  <span>{item.duration} min</span>
+
+                  <span>{item.location || "—"}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
