@@ -1,4 +1,5 @@
 import { Link, useNavigate, useSearchParams } from "react-router";
+import toast from "react-hot-toast";
 
 import PaymentForm from "../../../components/payments/PaymentForm";
 import { usePayments } from "../../../context/PaymentContext";
@@ -17,6 +18,8 @@ const AddPayment = () => {
 
   const handleSubmit = (paymentData) => {
     addPayment(paymentData);
+
+    toast.success("Payment recorded successfully.");
 
     navigate("/dashboard/payments", {
       replace: true,
