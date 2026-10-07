@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-
 import { Link, useSearchParams } from "react-router";
+import toast from "react-hot-toast";
 
 import { useStudents } from "../../../context/StudentContext";
 import { useAttendance } from "../../../context/AttendanceContext";
@@ -156,6 +156,8 @@ const Attendance = () => {
 
     setIsSaving(false);
     setSaved(true);
+
+    toast.success("Attendance saved successfully.");
   };
 
   return (
