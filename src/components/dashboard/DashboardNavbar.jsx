@@ -109,7 +109,7 @@ const DashboardNavbar = ({ onMenuClick }) => {
     if (path === "/dashboard/reports") {
       return {
         label: "Reports",
-        title: "Reports",
+        title: "Reports & Analytics",
       };
     }
 
