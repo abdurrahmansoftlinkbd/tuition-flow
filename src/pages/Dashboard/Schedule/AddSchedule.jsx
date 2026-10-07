@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router";
+import toast from "react-hot-toast";
 
 import ScheduleForm from "../../../components/schedule/ScheduleForm";
 import { useSchedules } from "../../../context/ScheduleContext";
@@ -10,6 +11,8 @@ const AddSchedule = () => {
 
   const handleSubmit = (scheduleData) => {
     addSchedule(scheduleData);
+
+    toast.success("Class schedule added successfully.");
 
     navigate("/dashboard/schedule", {
       replace: true,
