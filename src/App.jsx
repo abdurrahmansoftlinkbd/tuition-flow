@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import Home from "./pages/Home";
 
@@ -23,6 +23,8 @@ import Schedule from "./pages/Dashboard/Schedule/Schedule";
 import AddSchedule from "./pages/Dashboard/Schedule/AddSchedule";
 import EditSchedule from "./pages/Dashboard/Schedule/EditSchedule";
 
+import Reports from "./pages/Dashboard/Reports/Reports";
+
 import ProtectedRoute from "./routes/ProtectedRoute";
 
 const PlaceholderPage = ({ title, description }) => {
@@ -38,13 +40,11 @@ const PlaceholderPage = ({ title, description }) => {
 };
 
 const router = createBrowserRouter([
-  // Public
   {
     path: "/",
     element: <Home />,
   },
 
-  // Authentication
   {
     path: "/login",
     element: <Login />,
@@ -55,7 +55,6 @@ const router = createBrowserRouter([
     element: <Register />,
   },
 
-  // Protected Dashboard
   {
     element: <ProtectedRoute />,
     children: [
@@ -63,7 +62,6 @@ const router = createBrowserRouter([
         path: "/dashboard",
         element: <DashboardLayout />,
         children: [
-          // Overview
           {
             index: true,
             element: <DashboardHome />,
@@ -131,12 +129,7 @@ const router = createBrowserRouter([
           // Reports
           {
             path: "reports",
-            element: (
-              <PlaceholderPage
-                title="Reports"
-                description="View tuition, attendance, and student reports."
-              />
-            ),
+            element: <Reports />,
           },
 
           // Profile
