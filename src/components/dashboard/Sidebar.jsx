@@ -201,22 +201,6 @@ const Sidebar = ({ onClose }) => {
         </ul>
       </div>
 
-      <div className="mt-1 ml-8">
-        <NavLink
-          to="/dashboard/attendance/history"
-          onClick={onClose}
-          className={({ isActive }) =>
-            `block rounded-lg px-3 py-2 text-xs font-medium transition ${
-              isActive
-                ? "text-primary"
-                : "text-base-content/50 hover:text-base-content"
-            }`
-          }
-        >
-          Attendance History
-        </NavLink>
-      </div>
-
       {/* Bottom Navigation */}
       <div className="border-t border-base-200 p-4">
         <NavLink
