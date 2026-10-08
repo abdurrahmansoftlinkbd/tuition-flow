@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
+import { HelmetProvider } from "react-helmet-async";
 import { Toaster } from "react-hot-toast";
 
 import "./index.css";
@@ -15,28 +16,30 @@ import ScheduleProvider from "./context/ScheduleContext";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <AuthProvider>
-      <StudentProvider>
-        <PaymentProvider>
-          <AttendanceProvider>
-            <ScheduleProvider>
-              <App />
+    <HelmetProvider>
+      <AuthProvider>
+        <StudentProvider>
+          <PaymentProvider>
+            <AttendanceProvider>
+              <ScheduleProvider>
+                <App />
 
-              <Toaster
-                position="top-right"
-                reverseOrder={false}
-                toastOptions={{
-                  duration: 2500,
-                  style: {
-                    borderRadius: "10px",
-                    fontSize: "14px",
-                  },
-                }}
-              />
-            </ScheduleProvider>
-          </AttendanceProvider>
-        </PaymentProvider>
-      </StudentProvider>
-    </AuthProvider>
+                <Toaster
+                  position="top-right"
+                  reverseOrder={false}
+                  toastOptions={{
+                    duration: 2500,
+                    style: {
+                      borderRadius: "10px",
+                      fontSize: "14px",
+                    },
+                  }}
+                />
+              </ScheduleProvider>
+            </AttendanceProvider>
+          </PaymentProvider>
+        </StudentProvider>
+      </AuthProvider>
+    </HelmetProvider>
   </StrictMode>,
 );
