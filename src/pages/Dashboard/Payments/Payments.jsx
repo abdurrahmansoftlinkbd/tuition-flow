@@ -3,6 +3,7 @@ import { Link } from "react-router";
 
 import { usePayments } from "../../../context/PaymentContext";
 import { useStudents } from "../../../context/StudentContext";
+import TableSkeleton from "../../../components/skeletons/TableSkeleton";
 
 const getCurrentMonth = () => {
   return new Date().toISOString().slice(0, 7);
@@ -317,9 +318,7 @@ const Payments = () => {
         </div>
 
         {loading ? (
-          <div className="flex justify-center py-20">
-            <span className="loading loading-spinner loading-lg text-primary" />
-          </div>
+          <TableSkeleton rows={6} columns={6} />
         ) : filteredRows.length === 0 ? (
           <div className="px-5 py-20 text-center">
             <h3 className="font-semibold">No students found</h3>

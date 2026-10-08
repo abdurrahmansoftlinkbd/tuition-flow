@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router";
 import { useStudents } from "../../../context/StudentContext";
+import TableSkeleton from "../../../components/skeletons/TableSkeleton";
 
 const Students = () => {
   const { students, loading, deleteStudent } = useStudents();
@@ -182,9 +183,7 @@ const Students = () => {
 
         {/* Loading */}
         {loading ? (
-          <div className="flex justify-center py-20">
-            <span className="loading loading-spinner loading-lg text-primary" />
-          </div>
+          <TableSkeleton rows={6} columns={6} />
         ) : filteredStudents.length === 0 ? (
           /* Empty */
           <div className="px-5 py-20 text-center">

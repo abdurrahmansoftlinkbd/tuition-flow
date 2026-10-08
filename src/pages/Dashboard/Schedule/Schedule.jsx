@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router";
 
 import { useSchedules } from "../../../context/ScheduleContext";
+import TableSkeleton from "../../../components/skeletons/TableSkeleton";
 
 const dayOptions = [
   "All",
@@ -218,9 +219,7 @@ const Schedule = () => {
         </div>
 
         {loading ? (
-          <div className="flex justify-center py-20">
-            <span className="loading loading-spinner loading-lg text-primary" />
-          </div>
+          <TableSkeleton rows={6} columns={8} />
         ) : filteredSchedules.length === 0 ? (
           <div className="p-12 text-center">
             <h3 className="font-semibold">No schedules found</h3>
